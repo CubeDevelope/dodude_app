@@ -1,5 +1,6 @@
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/router.dart';
+import 'package:app/views/widgets/painters/hexagon_painter.dart';
 import 'package:flutter/material.dart';
 
 class DodudeNavBar extends StatefulWidget {
@@ -87,6 +88,7 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FloatingActionButton(
+                  shape: const HexagonPainter(factorScale: 1.15),
                   backgroundColor:
                       currentPage == 2 ? AppColors.accentColor : Colors.white,
                   child: const Icon(Icons.local_fire_department_outlined),
