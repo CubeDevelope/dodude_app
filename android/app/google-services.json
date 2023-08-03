@@ -1,0 +1,142 @@
+{
+  "project_info": {
+    "project_number": "558764736921",
+    "project_id": "moodmate-2d671",
+    "storage_bucket": "moodmate-2d671.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558764736921:android:fb07da8d249cab78341308",
+        "android_client_info": {
+          "package_name": "com.appfoundry.previewer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558764736921-q8auu9s9s5qeidt1ngmi0q0di3v7ctjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUoODxGo9PL_-tB6RQVCjtZz4N_E50F_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558764736921-q8auu9s9s5qeidt1ngmi0q0di3v7ctjk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "558764736921-4t4rti6cl5q9s8bft7mru4a3b2cu458v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.endorfine.moodmate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558764736921:android:1ffaf30eea0047bd341308",
+        "android_client_info": {
+          "package_name": "com.dodude.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558764736921-q8auu9s9s5qeidt1ngmi0q0di3v7ctjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUoODxGo9PL_-tB6RQVCjtZz4N_E50F_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558764736921-q8auu9s9s5qeidt1ngmi0q0di3v7ctjk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "558764736921-4t4rti6cl5q9s8bft7mru4a3b2cu458v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.endorfine.moodmate"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558764736921:android:b0a3dd64d5c4043e341308",
+        "android_client_info": {
+          "package_name": "com.endorfine.dodude"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "558764736921-cj23glcrjsa3pvpt79fb08e7m6jvk9bo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.endorfine.dodude",
+            "certificate_hash": "5877ae27f9c3d22444685d78a85439a5a7508226"
+          }
+        },
+        {
+          "client_id": "558764736921-gqj6fuen0ob43p66r0lrru1j5u0k1pk5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.endorfine.dodude",
+            "certificate_hash": "9bbb3186b2189ef16d8f272bdab59362c395cbb4"
+          }
+        },
+        {
+          "client_id": "558764736921-lb3eei3m367odva42bgu3sjl3s1m7301.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.endorfine.dodude",
+            "certificate_hash": "ae3258ae8050ca788f20ec20c65adb568f643050"
+          }
+        },
+        {
+          "client_id": "558764736921-q8auu9s9s5qeidt1ngmi0q0di3v7ctjk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUoODxGo9PL_-tB6RQVCjtZz4N_E50F_s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "558764736921-q8auu9s9s5qeidt1ngmi0q0di3v7ctjk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "558764736921-4t4rti6cl5q9s8bft7mru4a3b2cu458v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.endorfine.moodmate"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

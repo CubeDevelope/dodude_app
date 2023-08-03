@@ -1,11 +1,21 @@
 import 'package:app/views/actions.page.dart';
 import 'package:app/views/discovery.page.dart';
 import 'package:app/views/friends.page.dart';
-import 'package:app/views/notification.page,dart.dart';
+import 'package:app/views/login.page.dart';
+import 'package:app/views/notification.page.dart';
 import 'package:app/views/profile.page.dart';
+import 'package:app/views/settings.page.dart';
 import 'package:flutter/material.dart';
 
-enum PagesEnum { discovery, friends, newAction, notifications, profile }
+enum PagesEnum {
+  discovery,
+  friends,
+  newAction,
+  notifications,
+  profile,
+  login,
+  settings,
+}
 
 extension PagesEnumExt on PagesEnum {
   String get toPath => toString().split('.').last;
@@ -38,6 +48,12 @@ class Router {
         break;
       case PagesEnum.profile:
         page = const ProfilePage();
+        break;
+      case PagesEnum.login:
+        page = const LoginPage();
+        break;
+      case PagesEnum.settings:
+        page = SettingsPage();
         break;
     }
 

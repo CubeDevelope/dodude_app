@@ -10,9 +10,11 @@ class DodudeScaffold extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Navigator(
-        key: Keys.navigator,
-        onGenerateRoute: Router.generateRoute,
+      body: SafeArea(
+        child: Navigator(
+          key: Keys.navigator,
+          onGenerateRoute: Router.generateRoute,
+        ),
       ),
       bottomNavigationBar: const DodudeNavBar(),
     );
