@@ -19,45 +19,46 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
     return Scaffold(
       body: Stack(
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    smsCode = value;
-                  });
-                },
-              ),
-              ElevatedButton(
-                onPressed: smsCode.length < 6
-                    ? null
-                    : () async {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await context
-                            .read<AuthBloc>()
-                            .loginWithSmsCode(smsCode);
-                      },
-                child: const Text("Conferma"),
-              )
-            ],
-          ),
-          Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              right: 0,
-              child: Visibility(
-                visible: isLoading,
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(color: Colors.black.withAlpha(55)),
-                  child: const CircularProgressIndicator(),
+          Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16.0,
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      smsCode = value;
+                    });
+                  },
                 ),
-              ))
+                ElevatedButton(
+                  onPressed: smsCode.length < 6
+                      ? null
+                      : () async {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await context
+                              .read<AuthBloc>()
+                              .loginWithSmsCode(smsCode);
+                        },
+                  child: const Text("Conferma"),
+                )
+              ],
+            ),
+          ),
+          Positioned.fill(
+            child: Visibility(
+              visible: isLoading,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(color: Colors.black.withAlpha(55)),
+                child: const CircularProgressIndicator(),
+              ),
+            ),
+          )
         ],
       ),
     );
