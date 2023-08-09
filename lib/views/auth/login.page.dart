@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         Expanded(
           child: TextField(
-            decoration: InputDecoration.collapsed(hintText: 'Telefono'),
+            decoration: const InputDecoration.collapsed(hintText: 'Telefono'),
             keyboardType: TextInputType.number,
             onChanged: (value) {
               setState(() {
@@ -78,7 +78,21 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              isPhoneLogin ? _buildPhoneLogin() : _buildEmailLogin(),
+              const Text(
+                "Benvenuto",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 20),
+              ),
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text(
+                  "Inserisci il tuo numero di telefono o la tua email per accedere",
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 32.0),
+                child: isPhoneLogin ? _buildPhoneLogin() : _buildEmailLogin(),
+              ),
               TextButton(
                 onPressed: () {
                   setState(() {
@@ -95,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
                             email.isNotEmpty &&
                             password.isNotEmpty)
                     ? () async {
-                        await context.read<AuthBloc>().login(number);
+                        await AuthCubit.instance.login(number);
                       }
                     : null,
                 child: const Text("Login"),
