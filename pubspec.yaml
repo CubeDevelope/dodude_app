@@ -41,6 +41,10 @@ dependencies:
 
   provider:
   flutter_bloc:
+  cloud_firestore: ^4.8.4
+  cloud_functions:
+  intl:
+
 
 dev_dependencies:
   flutter_test:
