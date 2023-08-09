@@ -10,6 +10,6 @@ class ConfirmOTPState extends AuthState {
   ConfirmOTPState(this.verificationId);
 }
 
-class LoadingState extends AuthState {}
+class AddPersonalInformationState extends AuthState {}
 
 class AuthenticatedState extends AuthState {}

@@ -4,17 +4,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 
 class AuthRepository extends ChangeNotifier {
-  FirebaseApp? _firebaseApp;
   FirebaseAuth? _auth;
 
-  AuthRepository() {
-    initApp();
+  initApp() async {
+    await Firebase.initializeApp();
+    _auth = FirebaseAuth.instance;
   }
 
-  initApp() async {
-    _firebaseApp = await Firebase.initializeApp();
-    _auth = FirebaseAuth.instanceFor(app: _firebaseApp!);
-  }
+  bool get isLogged => _auth?.currentUser != null;
+  User? get currentUser => _auth?.currentUser;
 
   loginByPhone(String number,
       {Function(String verificationId)? codeSent,
@@ -24,7 +22,6 @@ class AuthRepository extends ChangeNotifier {
       verificationCompleted: (phoneAuthCredential) {},
       verificationFailed: (error) {
         onError?.call(error);
-        print("CodeError: ${error.code}");
       },
       codeSent: (verificationId, forceResendingToken) async {
         codeSent?.call(verificationId);

@@ -39,9 +39,7 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
   }
 
   navigateTo(String pageName) {
-    Keys.navigator.currentState?.pushNamedAndRemoveUntil(pageName, (route) {
-      return false;
-    },);
+    Keys.internalNavigator.currentState?.pushReplacementNamed(pageName);
   }
 
   @override

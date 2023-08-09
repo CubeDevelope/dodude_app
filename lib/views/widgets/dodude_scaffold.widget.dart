@@ -12,7 +12,7 @@ class DodudeScaffold extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Navigator(
-          key: Keys.navigator,
+          key: Keys.internalNavigator,
           onGenerateRoute: Router.generateRoute,
         ),
       ),
