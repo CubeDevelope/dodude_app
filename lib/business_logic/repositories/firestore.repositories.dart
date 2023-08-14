@@ -5,17 +5,27 @@ enum FirebaseEndpoints {
   getUserByID,
 }
 
-enum FirestoreCollectionsEndpoints { user }
+enum FirestoreCollectionsEndpoints { user, adminStuff }
 
 extension EndpointsExt on FirebaseEndpoints {
   String get toShortString => toString().split('.').last;
 }
 
 extension FirestoreCollectionsExt on FirestoreCollectionsEndpoints {
-  String get toShortString => toString().split('.').last;
+  String get toShortString {
+    String shortString = toString().split('.').last;
+    switch (this) {
+      case FirestoreCollectionsEndpoints.adminStuff:
+        shortString = "admin_stuff";
+        break;
+      default:
+    }
+    return shortString;
+  }
 }
 
 class FirestoreRepository {
+
   httpsCallable(FirebaseEndpoints endpoint, {dynamic data}) async {
     var result = await FirebaseFunctions.instance
         .httpsCallable(endpoint.toShortString)
@@ -56,6 +66,11 @@ class FirestoreRepository {
     required Map<String, dynamic> data,
   }) async {
     return await doc.set(data);
+  }
 
+  readDocument({
+    required DocumentReference doc,
+  }) async {
+    return await doc.get();
   }
 }

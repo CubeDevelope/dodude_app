@@ -9,6 +9,7 @@ class SeriesBuilder extends StatelessWidget {
   final bool isScrollable;
   final MainAxisAlignment mainAxisAlignment;
   final CrossAxisAlignment crossAxisAlignment;
+  final EdgeInsets padding;
 
   const SeriesBuilder({
     super.key,
@@ -18,6 +19,7 @@ class SeriesBuilder extends StatelessWidget {
     this.isScrollable = false,
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.center,
+    this.padding = EdgeInsets.zero,
   });
 
   List<Widget> _generateChildren() {
@@ -51,12 +53,15 @@ class SeriesBuilder extends StatelessWidget {
   }
 
   _buildListView(Widget child) {
-    if (isScrollable) {
-      return ListView(
-        children: [child],
-      );
-    }
-    return child;
+    Widget list = Padding(
+      padding: padding,
+      child: child,
+    );
+    return isScrollable && type == SeriesType.column
+        ? SingleChildScrollView(
+            child: list,
+          )
+        : list;
   }
 
   @override

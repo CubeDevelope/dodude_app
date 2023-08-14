@@ -1,11 +1,7 @@
-import 'package:app/business_logic/blocs/app.provider.dart';
-import 'package:app/business_logic/blocs/auth.bloc.dart';
 import 'package:app/business_logic/blocs/pages_bloc/profile.bloc.page.dart';
-import 'package:app/models/user.model.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/router.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -38,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
           child: Column(
             children: [
               Text(_bloc.currentUser.username ?? ""),
-              Text(_bloc.currentUser.fullName ?? ""),
+              Text(_bloc.currentUser.fullName),
               Expanded(
                   child: GridView.count(
                 crossAxisCount: 3,

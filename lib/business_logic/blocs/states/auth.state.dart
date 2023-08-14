@@ -12,4 +12,10 @@ class ConfirmOTPState extends AuthState {
 
 class AddPersonalInformationState extends AuthState {}
 
+class LoadingState extends AuthState {
+  String message;
+
+  LoadingState({this.message = "Caricamento"});
+}
+
 class AuthenticatedState extends AuthState {}

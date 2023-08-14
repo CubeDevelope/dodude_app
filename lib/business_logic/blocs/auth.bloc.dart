@@ -18,6 +18,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   TypeOfLogin type = TypeOfLogin.phone;
   UserCredential? userCredential;
+  PhoneAuthCredential? phoneAuthCredential;
   AppProvider appProvider = AppProvider.instance;
   UserModel? user;
 
@@ -28,14 +29,18 @@ class AuthCubit extends Cubit<AuthState> {
         await FirestoreManager().getUserData(_authRepository.currentUser!.uid);
 
     if (user == null) {
-      addInformation();
+      addInformationState();
     } else {
-      authenticate();
+      authenticateState();
     }
   }
 
   initApp() async {
+    emit(LoadingState(message: "Sto controllando l'accesso sul server"));
     await _authRepository.initApp();
+    emit(LoadingState(message: "Sto accedendo alle telecamere"));
+    await AppProvider.instance.getCameras();
+
     if (_authRepository.isLogged) {
       _setCurrentUser();
     } else {
@@ -64,12 +69,12 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   confirmOTP(String smsCode) async {
-    PhoneAuthCredential credential = PhoneAuthProvider.credential(
+    phoneAuthCredential = PhoneAuthProvider.credential(
       verificationId: (state as ConfirmOTPState).verificationId,
       smsCode: smsCode,
     );
 
-    userCredential = await _authRepository.loginWithCredential(credential);
+    userCredential = await _authRepository.loginWithCredential(phoneAuthCredential!);
     if (userCredential != null) {
       _setCurrentUser();
     } else {
@@ -77,14 +82,18 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  addInformation() {
+  addInformationState() {
     user = UserModel();
     user?.uid = _authRepository.currentUser?.uid;
     user?.email = _authRepository.currentUser?.email;
     emit(AddPersonalInformationState());
   }
 
-  Future<bool> updateUserData({
+  checkUsername(String userName) async {
+    return await _firestoreManager.checkUsername(userName);
+  }
+
+  Future<bool> addInformationToDB({
     required String userName,
     String name = "",
     String surname = "",
@@ -95,16 +104,15 @@ class AuthCubit extends Cubit<AuthState> {
     user?.phoneNumber = _authRepository.currentUser?.phoneNumber;
 
     if (await _firestoreManager.updateUserInformation(user!)) {
-      authenticate();
+      authenticateState();
       return true;
     } else {
       return false;
     }
   }
 
-  authenticate() {
+  authenticateState() {
     user?.phoneNumber ??= _authRepository.currentUser?.phoneNumber;
-
     appProvider.currentUser = user!;
     emit(AuthenticatedState());
   }
@@ -112,6 +120,13 @@ class AuthCubit extends Cubit<AuthState> {
   logout() {
     userCredential = null;
     _authRepository.logout();
+    emit(UnsignedState());
+  }
+
+  deleteUser() async {
+    emit(LoadingState());
+    await _authRepository.reauthenticateWithCredential(phoneAuthCredential!);
+    await _authRepository.deleteUser();
     emit(UnsignedState());
   }
 }

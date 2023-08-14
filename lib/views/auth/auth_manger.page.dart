@@ -19,40 +19,61 @@ class AuthManagerPage extends StatefulWidget {
 class _AuthManagerPageState extends State<AuthManagerPage> {
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer(
-      listener: (context, state) {
-        if (state is AuthenticatedState) {
-          Keys.masterNavigator.currentState
-              ?.pushReplacementNamed(MasterPages.home.toPath);
-        }
-      },
-      builder: (context, state) {
-        Widget page = const Center(
-          child: CircularProgressIndicator(),
-        );
+    return Scaffold(
+      body: SafeArea(
+        child: BlocConsumer(
+          listener: (context, state) {
+            if (state is AuthenticatedState) {
+              Keys.masterNavigator.currentState
+                  ?.pushReplacementNamed(MasterPages.home.toPath);
+            }
+          },
+          builder: (context, state) {
+            Widget page = const Center(
+              child: CircularProgressIndicator(),
+            );
 
-        switch (state.runtimeType) {
-          case UnsignedState:
-            page = const LoginPage();
-            break;
-          case InitializationState:
-            page = const SplashPage();
-            break;
-          case ConfirmOTPState:
-            page = const ConfirmOTPPage();
-            break;
-          case AddPersonalInformationState:
-            page = const AddPersonalInfoPage();
-            break;
-          default:
-        }
+            switch (state.runtimeType) {
+              case UnsignedState:
+                page = const LoginPage();
+                break;
+              case InitializationState:
+                page = const SplashPage();
+                break;
+              case ConfirmOTPState:
+                page = const ConfirmOTPPage();
+                break;
+              case AddPersonalInformationState:
+                page = const AddPersonalInfoPage();
+                break;
+              case LoadingState:
+                page = Scaffold(
+                  body: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                        Text((state as LoadingState).message)
+                      ],
+                    ),
+                  ),
+                );
+              default:
+            }
 
-        return page;
-      },
-      bloc: AuthCubit.instance,
-      buildWhen: (previous, current) {
-        return current is! AuthenticatedState;
-      },
+            return page;
+          },
+          bloc: AuthCubit.instance,
+          buildWhen: (previous, current) {
+            return current is! AuthenticatedState;
+          },
+        ),
+      ),
     );
   }
 }
