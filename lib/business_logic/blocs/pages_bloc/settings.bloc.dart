@@ -1,13 +1,12 @@
 import 'package:app/business_logic/blocs/app.provider.dart';
-import 'package:app/business_logic/blocs/auth.bloc.dart';
 import 'package:app/models/user.model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SettingsBloc {
-  final AppProvider _appProvider = AppProvider.instance;
-
+class SettingCubit extends Cubit {
   logout() {
-    _appProvider.currentUser = UserModel();
-
-    AuthCubit.instance.logout();
+    AppProvider.instance.currentUser = UserModel();
+    AppProvider.instance.authCubit.logout();
   }
+
+  SettingCubit() : super(null);
 }

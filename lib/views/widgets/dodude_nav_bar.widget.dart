@@ -1,7 +1,7 @@
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/router.dart';
-import 'package:app/views/widgets/painters/hexagon_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class DodudeNavBar extends StatefulWidget {
   const DodudeNavBar({super.key});
@@ -13,14 +13,6 @@ class DodudeNavBar extends StatefulWidget {
 class _DodudeNavBarState extends State<DodudeNavBar> {
   int currentPage = 0;
 
-  List<IconData?> icons = [
-    Icons.public,
-    Icons.groups_2_outlined,
-    null,
-    Icons.notifications_none,
-    Icons.account_circle_outlined
-  ];
-
   changePage(int pageIndex) {
     if (pageIndex != currentPage) {
       setState(() {
@@ -30,7 +22,7 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
   }
 
   getColorOfIcon(int pageIndex) {
-    Color color = Colors.white;
+    Color color = Colors.transparent;
     if (pageIndex == currentPage) {
       color = AppColors.accentColor;
     }
@@ -45,60 +37,116 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: AppBar().preferredSize.height * 1.3,
-      child: Stack(
-        children: [
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: AppBar().preferredSize.height,
-            child: Material(
-              child: Row(
-                children: icons.map((e) {
-                  if (e == null) {
-                    return const Spacer();
-                  }
-
-                  return Expanded(
-                    child: InkWell(
-                      onTap: () {
-                        navigateTo(PagesEnum.values[icons.indexOf(e)].toPath);
-                        changePage(icons.indexOf(e));
-                      },
-                      child: Center(
-                        child: Icon(
-                          e,
-                          color: getColorOfIcon(icons.indexOf(e)),
-                        ),
+      height: AppBar().preferredSize.height,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return Stack(
+            children: [
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 150),
+                left: (constraints.maxWidth / 5) * currentPage,
+                width: constraints.maxWidth / 5,
+                height: AppBar().preferredSize.height,
+                child: Container(
+                  color: AppColors.accentColor,
+                ),
+              ),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+                Expanded(
+                    child: GestureDetector(
+                  onTap: () {
+                    navigateTo(PagesEnum.discovery.toPath);
+                    setState(() {
+                      currentPage = 0;
+                    });
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset(
+                      AppIcons.earth.toAssetPath,
+                      width: 24,
+                      height: 24,
+                      color: Colors.white,
+                    ),
+                  ),
+                )),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        currentPage = 1;
+                      });
+                      navigateTo(PagesEnum.friends.toPath);
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      child: SvgPicture.asset(
+                        AppIcons.friends.toAssetPath,
+                        width: 22,
+                        color: Colors.white,
+                        height: 22,
                       ),
                     ),
-                  );
-                }).toList(),
-              ),
-            )
-          ),
-          Positioned(
-            left: 0,
-            right: 0,
-            top: 0,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                FloatingActionButton(
-                  shape: const HexagonPainter(factorScale: 1.15),
-                  backgroundColor:
-                      currentPage == 2 ? AppColors.accentColor : Colors.white,
-                  child: const Icon(Icons.local_fire_department_outlined),
-                  onPressed: () {
-                    navigateTo(PagesEnum.values[2].toPath);
-                    changePage(2);
+                  ),
+                ),
+                Expanded(
+                    child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      currentPage = 0;
+                    });
+                    navigateTo(PagesEnum.discovery.toPath);
+                    Keys.masterNavigator.currentState
+                        ?.pushNamed(MasterPages.newAction.toPath);
                   },
-                )
-              ],
-            ),
-          ),
-        ],
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: Text(
+                      "D",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 30,
+                          color: AppColors.accentColor),
+                    ),
+                  ),
+                )),
+                Expanded(
+                    child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      currentPage = 3;
+                    });
+                    navigateTo(PagesEnum.notifications.toPath);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset(
+                      AppIcons.bell.toAssetPath,
+                      width: 22,
+                      color: Colors.white,
+                      height: 22,
+                    ),
+                  ),
+                )),
+                Expanded(
+                    child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      currentPage = 4;
+                    });
+                    navigateTo(PagesEnum.profile.toPath);
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: const Icon(
+                      Icons.account_circle_outlined,
+                    ),
+                  ),
+                )),
+              ]),
+            ],
+          );
+        },
       ),
     );
   }

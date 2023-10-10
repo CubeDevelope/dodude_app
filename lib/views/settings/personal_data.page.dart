@@ -54,6 +54,9 @@ class _PersonalDataPageState extends State<PersonalDataPage> {
               decoration: const InputDecoration(hintText: "Nickname"),
             ),
             ListTile(
+              onTap: () {
+                //AuthCubit.instance.deleteUser();
+              },
               leading: Icon(Icons.delete_forever,
                   color: Theme.of(context).colorScheme.error),
               title: Text(

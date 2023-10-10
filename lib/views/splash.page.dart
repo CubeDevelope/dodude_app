@@ -1,4 +1,4 @@
-import 'package:app/business_logic/blocs/auth.bloc.dart';
+import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:flutter/material.dart';
 
 class SplashPage extends StatefulWidget {
@@ -12,9 +12,11 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      AuthCubit.instance.initApp();
-    }, );
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        AppProvider.instance.authCubit.initApp();
+      },
+    );
   }
 
   @override

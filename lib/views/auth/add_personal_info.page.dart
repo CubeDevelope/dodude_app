@@ -1,4 +1,4 @@
-import 'package:app/business_logic/blocs/auth.bloc.dart';
+import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/views/widgets/series.builder.dart';
 import 'package:flutter/material.dart';
@@ -22,11 +22,10 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
   bool isUsernameAvailable = true;
 
   _checkUsername() async {
-    print("Entrato");
     bool available = false;
 
     if (username.isNotEmpty && username.length > 4) {
-      available = await AuthCubit.instance.checkUsername(username);
+      available = await AppProvider.instance.authCubit.checkUsername(username);
       if (available != isUsernameAvailable) {
         setState(() {
           isUsernameAvailable = available;
@@ -40,8 +39,7 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
     return Stack(
       children: [
         SeriesBuilder(
-          padding:
-          const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
           gap: 20.0,
           mainAxisAlignment: MainAxisAlignment.center,
           isScrollable: true,
@@ -78,9 +76,8 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                     child: Text(
                       "Ciao",
                       style: TextStyle(
-                          color: isUsernameAvailable
-                              ? Colors.green
-                              : Colors.red),
+                          color:
+                              isUsernameAvailable ? Colors.green : Colors.red),
                     ),
                   ),
                 )
@@ -107,8 +104,7 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
                 DateTime? selectedData = await showDatePicker(
                     context: context,
                     initialDate: birthDay ??
-                        DateTime.now()
-                            .copyWith(year: DateTime.now().year - 14),
+                        DateTime.now().copyWith(year: DateTime.now().year - 14),
                     firstDate: DateTime(1900),
                     lastDate: DateTime.now()
                         .copyWith(year: DateTime.now().year - 14));
@@ -123,32 +119,32 @@ class _AddPersonalInfoPageState extends State<AddPersonalInfoPage> {
             ElevatedButton(
                 onPressed: isUsernameAvailable
                     ? () async {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  AuthCubit.instance
-                      .addInformationToDB(
-                    userName: username,
-                    name: _nameController.text,
-                    surname: _surnameController.text,
-                  )
-                      .then((value) {
-                    setState(() {
-                      isLoading = value;
-                    });
-                  });
-                }
+                        setState(() {
+                          isLoading = true;
+                        });
+                        AppProvider.instance.authCubit
+                            .addInformationToDB(
+                          userName: username,
+                          name: _nameController.text,
+                          surname: _surnameController.text,
+                        )
+                            .then((value) {
+                          setState(() {
+                            isLoading = value;
+                          });
+                        });
+                      }
                     : null,
                 child: const Text("Salva"))
           ],
         ),
         Positioned(
             child: Visibility(
-              visible: isLoading,
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ))
+          visible: isLoading,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ))
       ],
     );
   }

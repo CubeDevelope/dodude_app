@@ -1,45 +1,46 @@
+import 'package:app/business_logic/blocs/auth.bloc.dart';
+import 'package:app/business_logic/blocs/pages_bloc/action.bloc.dart';
+import 'package:app/business_logic/blocs/pages_bloc/home.bloc.dart';
+import 'package:app/business_logic/blocs/pages_bloc/notification.bloc.dart';
+import 'package:app/business_logic/blocs/pages_bloc/settings.bloc.dart';
+import 'package:app/business_logic/managers/firestore.manager.dart';
+import 'package:app/business_logic/repositories/firestore.repositories.dart';
+import 'package:app/enums/endpoint.dart';
+import 'package:app/models/action_type.model.dart';
 import 'package:app/models/user.model.dart';
-import 'package:camera/camera.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
+/// In questa classe vengono salvate tutte le informazioni che devono viaggiare all'interno dell'app
 class AppProvider {
   static final AppProvider _instance = AppProvider._();
 
-  static get instance => _instance;
+  static AppProvider get instance => _instance;
 
   UserModel currentUser = UserModel();
-  bool? _cameraPermission;
 
   AppProvider._();
 
-  List<CameraDescription> cameras = [];
+  HomeCubit homeCubit = HomeCubit();
+  SettingCubit settingBloc = SettingCubit();
+  AuthCubit authCubit = AuthCubit();
+  ActionCubit actionCubit = ActionCubit();
+  NotificationCubit notificationCubit = NotificationCubit();
 
-  getCameras() async {
-    cameras = await availableCameras();
+  FirestoreManager firestoreManager = FirestoreManager();
+  FirestoreRepository firestoreRepository = FirestoreRepository();
+
+  getNotification() async {
+    notificationCubit.getNotifications();
   }
 
-  Future<bool> get cameraPermission async {
-    _cameraPermission ??= await _checkPermission(Permission.camera);
-    return _cameraPermission!;
+  syncActions() {
+    homeCubit.getAllActions();
+    actionCubit.getThreeActions();
   }
 
-  Future<PermissionStatus> _createRequest(Permission permission) async {
-    return await permission.request();
-  }
-
-  Future<bool> _checkPermission(Permission permission) async {
-    PermissionStatus permissionStatus = await permission.status;
-
-    if (permissionStatus == PermissionStatus.denied) {
-      permissionStatus = await _createRequest(permission);
-    }
-
-    switch (permissionStatus) {
-      case PermissionStatus.permanentlyDenied || PermissionStatus.restricted:
-        return false;
-
-      default:
-        return true;
-    }
+  DocumentReference get userDocReference {
+    return firestoreRepository.getDocumentReference(
+        currentUser.uid!, FirestoreCollectionsNames.user);
   }
 }

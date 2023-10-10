@@ -1,57 +1,59 @@
+import 'package:app/enums/endpoint.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloud_functions/cloud_functions.dart';
-
-enum FirebaseEndpoints {
-  getUserByID,
-}
-
-enum FirestoreCollectionsEndpoints { user, adminStuff }
-
-extension EndpointsExt on FirebaseEndpoints {
-  String get toShortString => toString().split('.').last;
-}
-
-extension FirestoreCollectionsExt on FirestoreCollectionsEndpoints {
-  String get toShortString {
-    String shortString = toString().split('.').last;
-    switch (this) {
-      case FirestoreCollectionsEndpoints.adminStuff:
-        shortString = "admin_stuff";
-        break;
-      default:
-    }
-    return shortString;
-  }
-}
 
 class FirestoreRepository {
-
-  httpsCallable(FirebaseEndpoints endpoint, {dynamic data}) async {
-    var result = await FirebaseFunctions.instance
-        .httpsCallable(endpoint.toShortString)
-        .call(data);
-    return result.data;
-  }
-
-  DocumentReference getDocument(String uid,
-      {CollectionReference? collection,
-      FirestoreCollectionsEndpoints? collectionsEndpoint}) {
-    assert(collection != null || collectionsEndpoint != null,
-        "collection or collectionEndpoint must be not null");
-
+  DocumentReference getDocumentReference(
+      String documentId, FirestoreCollectionsNames collectionsEndpoint) {
     CollectionReference collectionReference =
-        collection ?? getCollection(collectionsEndpoint!);
+        getCollectionReference(collectionsEndpoint);
 
-    return collectionReference.doc(uid);
+    return collectionReference.doc(documentId);
   }
 
-  CollectionReference getCollection(FirestoreCollectionsEndpoints collection) {
-    return FirebaseFirestore.instance.collection(collection.toShortString);
+  CollectionReference getCollectionReference(
+      FirestoreCollectionsNames collectionsName) {
+    return FirebaseFirestore.instance.collection(collectionsName.toShortString);
   }
 
-  Future<bool> docExists(DocumentReference doc) async {
-    var docRef = await doc.get();
+  Future<bool> docExists(DocumentReference documentReference) async {
+    var docRef = await documentReference.get();
     return docRef.exists;
+  }
+
+  getAllDocumentsFromCollection(
+      {required CollectionReference collection,
+      int limit = 100,
+      String? field,
+      Object? isLessThanOrEqualTo,
+      Object? isGreaterThanOrEqualTo,
+      Object? isEqualTo}) async {
+    Query queryCollection = collection.limit(limit);
+    if (field != null) {
+      queryCollection = queryCollection.where(
+        field,
+        isEqualTo: isEqualTo,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+      );
+    }
+    return await queryCollection.get();
+  }
+
+  getAllDocumentFromCollectionSnapshot(
+      {required CollectionReference collection,
+      String? field,
+      Object? isEqualTo}) {
+    Query queryCollection = collection.limit(10);
+    if (field != null) {
+      queryCollection = queryCollection.where(field, isEqualTo: isEqualTo);
+    }
+    return queryCollection.snapshots();
+  }
+
+  Stream<DocumentSnapshot<Object?>> getDocumentSnapshot({
+    required DocumentReference documentReference,
+  }) {
+    return documentReference.snapshots();
   }
 
   updateDocument({
@@ -68,9 +70,9 @@ class FirestoreRepository {
     return await doc.set(data);
   }
 
-  readDocument({
-    required DocumentReference doc,
+  Future<DocumentSnapshot> readDocument({
+    required DocumentReference documentReference,
   }) async {
-    return await doc.get();
+    return await documentReference.get();
   }
 }

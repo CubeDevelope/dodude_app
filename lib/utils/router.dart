@@ -1,20 +1,23 @@
+import 'dart:io';
+
 import 'package:app/views/actions.page.dart';
 import 'package:app/views/auth/auth_manger.page.dart';
 import 'package:app/views/auth/login.page.dart';
 import 'package:app/views/discovery.page.dart';
+import 'package:app/views/friend_profile.page.dart';
 import 'package:app/views/friends.page.dart';
+import 'package:app/views/friendship_requests.page.dart';
 import 'package:app/views/home.page.dart';
 import 'package:app/views/notification.page.dart';
 import 'package:app/views/profile.page.dart';
 import 'package:app/views/settings/personal_data.page.dart';
 import 'package:app/views/settings/privacy.settings.page.dart';
 import 'package:app/views/settings/settings.page.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 enum PagesEnum {
   discovery,
   friends,
-  newAction,
   notifications,
   profile,
   login,
@@ -25,7 +28,10 @@ enum MasterPages {
   home,
   personalData,
   settings,
+  newAction,
   privacy,
+  friendProfile,
+  friendshipRequest,
 }
 
 extension PagesEnumExt on PagesEnum {
@@ -64,9 +70,7 @@ class Router {
       case PagesEnum.friends:
         page = const FriendsPage();
         break;
-      case PagesEnum.newAction:
-        page = const ActionsPage();
-        break;
+
       case PagesEnum.notifications:
         page = const NotificationPage();
         break;
@@ -106,14 +110,32 @@ class Router {
       case MasterPages.privacy:
         page = const PrivacySettingPage();
         break;
+      case MasterPages.newAction:
+        page = const ActionsPage();
+        break;
+      case MasterPages.friendProfile:
+        page = const FriendProfilePage();
+        break;
+      case MasterPages.friendshipRequest:
+        page = const FriendshipRequestsPage();
+        break;
+    }
+
+    if (Platform.isIOS) {
+      return CupertinoPageRoute(
+        builder: (context) {
+          return page;
+        },
+      );
     }
 
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) {
-        return FadeTransition(
-          opacity: animation,
-          child: page,
-        );
+        return page;
+        /*return FadeTransition(
+            opacity: animation,
+            child:,
+          );*/
       },
     );
   }

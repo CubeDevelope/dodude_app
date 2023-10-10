@@ -1,4 +1,4 @@
-import 'package:app/business_logic/blocs/pages_bloc/settings.bloc.dart';
+import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/router.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +11,6 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  final SettingsBloc _bloc = SettingsBloc();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +37,7 @@ class _SettingsPageState extends State<SettingsPage> {
             leading: const Icon(Icons.power_settings_new),
             title: const Text("Logout"),
             onTap: () {
-              _bloc.logout();
+              AppProvider.instance.settingBloc.logout();
               Keys.masterNavigator.currentState?.popUntil((route) => false);
               Keys.masterNavigator.currentState
                   ?.pushNamed(MasterPages.auth.toPath);

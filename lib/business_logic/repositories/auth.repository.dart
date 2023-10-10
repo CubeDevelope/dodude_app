@@ -1,4 +1,3 @@
-import 'package:app/business_logic/blocs/events/error.event.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -12,9 +11,10 @@ class AuthRepository extends ChangeNotifier {
   }
 
   bool get isLogged => _auth?.currentUser != null;
+
   User? get currentUser => _auth?.currentUser;
 
-  loginByPhone(String number,
+  void loginByPhone(String number,
       {Function(String verificationId)? codeSent,
       Function(FirebaseAuthException error)? onError}) async {
     await _auth?.verifyPhoneNumber(
@@ -35,13 +35,22 @@ class AuthRepository extends ChangeNotifier {
     return _auth?.signInWithCredential(credential);
   }
 
-  loginByEmail() async {}
+  void loginByEmail() async {}
 
   bool signUp() {
     return false;
   }
 
-  logout() async {
+  void logout() async {
     await _auth?.signOut();
+  }
+
+  reauthenticateWithCredential(AuthCredential credential) async {
+    await _auth?.currentUser?.reauthenticateWithCredential(credential);
+  }
+
+
+  deleteUser() async {
+    await _auth?.currentUser?.delete();
   }
 }

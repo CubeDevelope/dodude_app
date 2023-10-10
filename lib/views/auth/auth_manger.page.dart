@@ -1,4 +1,4 @@
-import 'package:app/business_logic/blocs/auth.bloc.dart';
+import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/business_logic/blocs/states/auth.state.dart';
 import 'package:app/utils/constants.dart';
 import 'package:app/utils/router.dart';
@@ -68,7 +68,7 @@ class _AuthManagerPageState extends State<AuthManagerPage> {
 
             return page;
           },
-          bloc: AuthCubit.instance,
+          bloc: AppProvider.instance.authCubit,
           buildWhen: (previous, current) {
             return current is! AuthenticatedState;
           },

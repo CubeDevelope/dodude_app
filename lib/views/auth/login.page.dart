@@ -1,3 +1,4 @@
+import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/business_logic/blocs/auth.bloc.dart';
 import 'package:flutter/material.dart';
 
@@ -13,7 +14,13 @@ class _LoginPageState extends State<LoginPage> {
   String email = "", password = "";
   bool isPhoneLogin = true;
 
-  _buildPhoneLogin() {
+  final AuthCubit authCubit = AppProvider.instance.authCubit;
+
+  ///
+  /// Costruisce la schermata per il login tramite numero di telefono
+  ///
+
+  Widget _buildPhoneLogin() {
     return Row(
       children: [
         const Text(
@@ -37,6 +44,9 @@ class _LoginPageState extends State<LoginPage> {
       ],
     );
   }
+
+  /// Costruisce la parte della ui per effettuare il login tramite email
+  // TODO: creare il procedimento per effettuare il login
 
   _buildEmailLogin() {
     return Column(
@@ -99,12 +109,10 @@ class _LoginPageState extends State<LoginPage> {
             ),
             ElevatedButton(
               onPressed: (isPhoneLogin && number.isNotEmpty) ||
-                  (!isPhoneLogin &&
-                      email.isNotEmpty &&
-                      password.isNotEmpty)
+                      (!isPhoneLogin && email.isNotEmpty && password.isNotEmpty)
                   ? () async {
-                await AuthCubit.instance.login(number);
-              }
+                      await authCubit.login(number);
+                    }
                   : null,
               child: const Text("Login"),
             )

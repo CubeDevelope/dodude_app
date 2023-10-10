@@ -1,7 +1,7 @@
 import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/business_logic/blocs/states/auth.state.dart';
 import 'package:app/business_logic/managers/firestore.manager.dart';
-import 'package:app/business_logic/repositories/auth_repository.dart';
+import 'package:app/business_logic/repositories/auth.repository.dart';
 import 'package:app/models/user.model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,25 +12,21 @@ class AuthCubit extends Cubit<AuthState> {
   final AuthRepository _authRepository = AuthRepository();
   final FirestoreManager _firestoreManager = FirestoreManager();
 
-  static final AuthCubit _instance = AuthCubit._();
-
-  AuthCubit._() : super(InitializationState());
+  AuthCubit() : super(InitializationState());
 
   TypeOfLogin type = TypeOfLogin.phone;
   UserCredential? userCredential;
   PhoneAuthCredential? phoneAuthCredential;
-  AppProvider appProvider = AppProvider.instance;
   UserModel? user;
-
-  static AuthCubit get instance => _instance;
 
   _setCurrentUser() async {
     user =
-        await FirestoreManager().getUserData(_authRepository.currentUser!.uid);
+        await _firestoreManager.getUserData(_authRepository.currentUser!.uid);
 
     if (user == null) {
       addInformationState();
     } else {
+      AppProvider.instance.syncActions();
       authenticateState();
     }
   }
@@ -38,8 +34,6 @@ class AuthCubit extends Cubit<AuthState> {
   initApp() async {
     emit(LoadingState(message: "Sto controllando l'accesso sul server"));
     await _authRepository.initApp();
-    emit(LoadingState(message: "Sto accedendo alle telecamere"));
-    await AppProvider.instance.getCameras();
 
     if (_authRepository.isLogged) {
       _setCurrentUser();
@@ -74,7 +68,8 @@ class AuthCubit extends Cubit<AuthState> {
       smsCode: smsCode,
     );
 
-    userCredential = await _authRepository.loginWithCredential(phoneAuthCredential!);
+    userCredential =
+        await _authRepository.loginWithCredential(phoneAuthCredential!);
     if (userCredential != null) {
       _setCurrentUser();
     } else {
@@ -113,7 +108,8 @@ class AuthCubit extends Cubit<AuthState> {
 
   authenticateState() {
     user?.phoneNumber ??= _authRepository.currentUser?.phoneNumber;
-    appProvider.currentUser = user!;
+    AppProvider.instance.currentUser = user!;
+    AppProvider.instance.getNotification();
     emit(AuthenticatedState());
   }
 

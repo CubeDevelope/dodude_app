@@ -22,7 +22,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         navigatorKey: Keys.masterNavigator,
         themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark(),
+        theme: AppColors.lightTheme,
+        darkTheme: AppColors.darkTheme,
         onGenerateRoute: Router.masterGenerateRoute,
         initialRoute: MasterPages.auth.toPath,
       ),

@@ -1,4 +1,4 @@
-import 'package:app/business_logic/blocs/auth.bloc.dart';
+import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmOTPPage extends StatefulWidget {
@@ -35,32 +35,33 @@ class _ConfirmOTPPageState extends State<ConfirmOTPPage> {
                     children: List.generate(6, (index) {
                       return Expanded(
                           child: Container(
-                            alignment: Alignment.center,
-                            height: 70,
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.0),
-                                border: Border.all(
-                                    color:
+                        alignment: Alignment.center,
+                        height: 70,
+                        margin: const EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16.0),
+                            border: Border.all(
+                                color:
                                     Theme.of(context).colorScheme.secondary)),
-                            child: Text(
-                              smsCode.length >= index + 1 ? smsCode[index] : "",
-                              style: const TextStyle(
-                                  fontSize: 20.0, fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ));
+                        child: Text(
+                          smsCode.length >= index + 1 ? smsCode[index] : "",
+                          style: const TextStyle(
+                              fontSize: 20.0, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                      ));
                     }),
                   )),
               ElevatedButton(
                 onPressed: smsCode.length < 6
                     ? null
                     : () async {
-                  setState(() {
-                    isLoading = true;
-                  });
-                  await AuthCubit.instance.confirmOTP(smsCode);
-                },
+                        setState(() {
+                          isLoading = true;
+                        });
+                        await AppProvider.instance.authCubit
+                            .confirmOTP(smsCode);
+                      },
                 child: const Text("Conferma"),
               )
             ],
