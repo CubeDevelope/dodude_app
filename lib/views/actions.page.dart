@@ -1,6 +1,7 @@
 import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/business_logic/blocs/pages_bloc/action.bloc.dart';
 import 'package:app/models/action_type.model.dart';
+import 'package:app/views/widgets/tiles/new_action.tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,26 +26,24 @@ class _ActionsPageState extends State<ActionsPage> {
         ...state
             .sublist(3 * currentTryOfActions, (currentTryOfActions + 1) * 3)
             .map<Widget>(
-              (e) => Container(
-                margin: const EdgeInsets.symmetric(horizontal: 32.0),
-                height: 100,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(32),
-                    border: Border.all(width: 2, color: Colors.red)),
-                alignment: Alignment.center,
-                child: Text(e.actionId.toString()),
+              (e) => NewActionTile(
+                actionType: e,
+                onTap: () {},
               ),
             )
             .toList(),
-        FloatingActionButton(
-            onPressed: () {
-              if (currentTryOfActions < 4) {
-                setState(() {
-                  currentTryOfActions++;
-                });
-              }
-            },
-            child: const Icon(Icons.shuffle))
+        Visibility(
+          visible: currentTryOfActions != 3,
+          child: FloatingActionButton(
+              onPressed: () {
+                if (currentTryOfActions < 3) {
+                  setState(() {
+                    currentTryOfActions++;
+                  });
+                }
+              },
+              child: const Icon(Icons.shuffle)),
+        )
       ];
     } else {
       return [
