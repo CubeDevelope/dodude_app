@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,6 +8,8 @@ class AuthRepository extends ChangeNotifier {
 
   initApp() async {
     await Firebase.initializeApp();
+    await FirebaseAppCheck.instance
+        .activate(androidProvider: AndroidProvider.debug);
     _auth = FirebaseAuth.instance;
   }
 
@@ -48,7 +51,6 @@ class AuthRepository extends ChangeNotifier {
   reauthenticateWithCredential(AuthCredential credential) async {
     await _auth?.currentUser?.reauthenticateWithCredential(credential);
   }
-
 
   deleteUser() async {
     await _auth?.currentUser?.delete();

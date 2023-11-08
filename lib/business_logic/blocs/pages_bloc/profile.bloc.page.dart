@@ -1,8 +1,12 @@
-import 'package:app/business_logic/blocs/app.provider.dart';
-import 'package:app/models/user.model.dart';
+import 'package:app/models/completed_action.model.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProfileBloc {
-  final AppProvider _appProvider = AppProvider.instance;
+class ProfileCubit extends Cubit<List<CompletedAction>>{
 
-  UserModel get currentUser => _appProvider.currentUser;
+  ProfileCubit() : super([]);
+
+
+  getUserPostSnapshot() async {
+
+  }
 }

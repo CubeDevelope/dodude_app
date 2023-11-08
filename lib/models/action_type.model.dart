@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ActionType {
-  static String actionContextKey = "action_cotnext";
+  static String actionContextKey = "action_context";
   static String actionCreatorSponsorKey = "action_creator_sponsor";
   static String actionCultureKey = "action_culture";
   static String actionDescriptionKey = "action_description";
@@ -18,6 +18,7 @@ class ActionType {
   String actionInfo;
   String actionMood;
   String actionTitle;
+  String uid;
 
   factory ActionType.fromJson(Map<String, dynamic> map) {
     return ActionType(
@@ -33,7 +34,11 @@ class ActionType {
   }
 
   factory ActionType.fromDocument(DocumentSnapshot document) {
-    return ActionType.fromJson(document.data() as Map<String, dynamic>);
+    Map<String, dynamic> map = document.data() as Map<String, dynamic>;
+    ActionType action = ActionType.fromJson(map);
+    action.uid = document.id;
+
+    return action;
   }
 
   ActionType({
@@ -45,5 +50,6 @@ class ActionType {
     this.actionId = 0,
     this.actionInfo = "",
     this.actionMood = "",
+    this.uid = "",
   });
 }

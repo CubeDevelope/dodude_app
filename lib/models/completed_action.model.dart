@@ -11,6 +11,7 @@ class CompletedAction extends Model {
   static String creatorImageKey = "creator_image";
   static String creatorUsernameKey = "creator_username";
   static String createdAtKey = "created_at";
+  static String actionKey = "action";
 
   CompletedAction({
     String uid = "",
@@ -23,6 +24,7 @@ class CompletedAction extends Model {
     this.creatorUsername = "",
     this.createdBy,
     this.createdAt,
+    this.action,
   }) : super(uid);
 
   String actionDescription;
@@ -34,6 +36,7 @@ class CompletedAction extends Model {
   DocumentReference? createdBy;
   String creatorUsername;
   Timestamp? createdAt;
+  DocumentReference? action;
 
   factory CompletedAction.fromJson(Map<String, dynamic> json) {
     var completeAction = CompletedAction(
@@ -49,7 +52,8 @@ class CompletedAction extends Model {
             : [],
         creatorUsername: json[creatorUsernameKey] ?? "Non presente",
         createdAt: json[createdAtKey] ?? Timestamp.now(),
-        createdBy: json[createdByKey]);
+        createdBy: json[createdByKey],
+        action: json[actionKey]);
 
     return completeAction;
   }
@@ -73,19 +77,20 @@ class CompletedAction extends Model {
   CompletedAction copyWith({
     List<DocumentReference>? angelsPositive,
     List<DocumentReference>? angelsNegative,
+    DocumentReference? action,
   }) {
     return CompletedAction(
-      uid: uid!,
-      createdBy: createdBy,
-      createdAt: createdAt,
-      angelsPositive: angelsPositive ?? this.angelsPositive,
-      angelsNegative: angelsNegative ?? this.angelsNegative,
-      totalViews: totalViews,
-      actionTitle: actionTitle,
-      actionDescription: actionDescription,
-      creatorImage: creatorImage,
-      creatorUsername: creatorUsername,
-    );
+        uid: uid!,
+        createdBy: createdBy,
+        createdAt: createdAt,
+        angelsPositive: angelsPositive ?? this.angelsPositive,
+        angelsNegative: angelsNegative ?? this.angelsNegative,
+        totalViews: totalViews,
+        actionTitle: actionTitle,
+        actionDescription: actionDescription,
+        creatorImage: creatorImage,
+        creatorUsername: creatorUsername,
+        action: action ?? this.action);
   }
 
   @override
@@ -93,8 +98,10 @@ class CompletedAction extends Model {
     return {
       actionTitleKey: actionTitle,
       actionDescriptionKey: actionDescription,
-      angelsPositiveKey: angelsPositive,
-      angelsNegativeKey: angelsNegative,
+      angelsPositiveKey: angelsPositive ?? [],
+      angelsNegativeKey: angelsNegative ?? [],
+      createdByKey: createdBy,
+      actionKey: action,
     };
   }
 

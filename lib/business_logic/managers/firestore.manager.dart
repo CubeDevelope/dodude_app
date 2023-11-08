@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:app/business_logic/managers/base_manager.dart';
@@ -13,11 +14,13 @@ class FirestoreManager extends BaseManager {
   Random random = Random();
 
   Future<UserModel?> getUserData(String uid) async {
-    var docRef = firestoreRepository.getDocumentReference(
-        uid, FirestoreCollectionsNames.user);
+    var docRef = firestoreRepository.getDocumentReference(uid,
+        collectionsEndpoint: FirestoreCollectionsNames.user);
 
     var data =
         await firestoreRepository.readDocument(documentReference: docRef);
+
+    if (data.data() == null) return null;
 
     return UserModel.fromDocument(data);
   }
@@ -28,8 +31,9 @@ class FirestoreManager extends BaseManager {
       collection: firestoreRepository.getCollectionReference(
         FirestoreCollectionsNames.actionFinished,
       ),
-          field: "created_at",
-          isGreaterThanOrEqualTo: Timestamp.fromDate(DateTime(DateTime.now().year - 1)),
+      field: "created_at",
+      isGreaterThanOrEqualTo:
+          Timestamp.fromDate(DateTime(DateTime.now().year - 1)),
     );
 
     List<CompletedAction> completedActions = [];
@@ -53,7 +57,7 @@ class FirestoreManager extends BaseManager {
   updateUserInformation(UserModel user) async {
     DocumentReference userInfoDoc = firestoreRepository.getDocumentReference(
       user.uid!,
-      FirestoreCollectionsNames.user,
+      collectionsEndpoint: FirestoreCollectionsNames.user,
     );
 
     try {
@@ -63,7 +67,7 @@ class FirestoreManager extends BaseManager {
             doc: userInfoDoc, data: user.toJson());
       } else {
         await firestoreRepository.createDocument(
-            doc: userInfoDoc, data: user.toJson());
+            documentReference: userInfoDoc, data: user.toJson());
       }
 
       return true;
@@ -76,7 +80,7 @@ class FirestoreManager extends BaseManager {
     return await firestoreRepository.readDocument(
         documentReference: firestoreRepository.getDocumentReference(
       uid,
-      FirestoreCollectionsNames.activeNotifications,
+      collectionsEndpoint: FirestoreCollectionsNames.activeNotifications,
     ));
   }
 
@@ -87,8 +91,8 @@ class FirestoreManager extends BaseManager {
         FirestoreCollectionsNames.activeNotifications,
       ),
       field: "recipient",
-      isEqualTo: firestoreRepository.getDocumentReference(
-          uid, FirestoreCollectionsNames.user),
+      isEqualTo: firestoreRepository.getDocumentReference(uid,
+          collectionsEndpoint: FirestoreCollectionsNames.user),
     );
 
     List<NotificationModel> notifications =
@@ -108,8 +112,8 @@ class FirestoreManager extends BaseManager {
         FirestoreCollectionsNames.activeNotifications,
       ),
       field: "recipient",
-      isEqualTo: firestoreRepository.getDocumentReference(
-          uid, FirestoreCollectionsNames.user),
+      isEqualTo: firestoreRepository.getDocumentReference(uid,
+          collectionsEndpoint: FirestoreCollectionsNames.user),
     );
   }
 
@@ -117,8 +121,8 @@ class FirestoreManager extends BaseManager {
     CompletedAction post,
   ) {
     firestoreRepository.updateDocument(
-      doc: firestoreRepository.getDocumentReference(
-          post.uid!, FirestoreCollectionsNames.actionFinished),
+      doc: firestoreRepository.getDocumentReference(post.uid!,
+          collectionsEndpoint: FirestoreCollectionsNames.actionFinished),
       data: post.toJson(),
     );
   }
@@ -126,13 +130,17 @@ class FirestoreManager extends BaseManager {
   Stream<DocumentSnapshot<Object?>> getCompletedActionSnapshot(
       CompletedAction action) {
     return firestoreRepository.getDocumentSnapshot(
-        documentReference: firestoreRepository.getDocumentReference(
-            action.uid!, FirestoreCollectionsNames.actionFinished));
+        documentReference: firestoreRepository.getDocumentReference(action.uid!,
+            collectionsEndpoint: FirestoreCollectionsNames.actionFinished));
+  }
+
+  uploadImage(File file) {
+    firestoreRepository.uploadFile(file);
   }
 
   _getUsernameDocReference() {
-    return firestoreRepository.getDocumentReference(
-        "m9DcVqOYrzsPJ8yrrB4j", FirestoreCollectionsNames.adminStuff);
+    return firestoreRepository.getDocumentReference("m9DcVqOYrzsPJ8yrrB4j",
+        collectionsEndpoint: FirestoreCollectionsNames.adminStuff);
   }
 
   _getUsernamesDoc() async {
@@ -188,4 +196,33 @@ class FirestoreManager extends BaseManager {
   }
 
   deleteUser() {}
+
+  // Actions
+
+  createNewAction(CompletedAction action) async {
+    firestoreRepository
+        .createDocument(
+            collectionReference: firestoreRepository.getCollectionReference(
+                FirestoreCollectionsNames.actionFinished),
+            data: action.toJson())
+        .then((value) => print(value));
+  }
+
+  // Streams Snapshot
+
+  Stream<DocumentSnapshot> getUserInformation(String userId) {
+    return firestoreRepository.getDocumentSnapshot(
+        documentReference: firestoreRepository.getDocumentReference(userId,
+            collectionsEndpoint: FirestoreCollectionsNames.user));
+  }
+
+  Stream<QuerySnapshot> getUserActions(String userId) {
+    return firestoreRepository.getAllDocumentFromCollectionSnapshot(
+      collection: firestoreRepository
+          .getCollectionReference(FirestoreCollectionsNames.actionFinished),
+      field: "created_by",
+      isEqualTo: firestoreRepository.getDocumentReference(userId,
+          collectionsEndpoint: FirestoreCollectionsNames.user),
+    );
+  }
 }

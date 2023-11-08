@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/views/actions.page.dart';
 import 'package:app/views/auth/auth_manger.page.dart';
 import 'package:app/views/auth/login.page.dart';
+import 'package:app/views/create_action.page.dart';
 import 'package:app/views/discovery.page.dart';
 import 'package:app/views/friend_profile.page.dart';
 import 'package:app/views/friends.page.dart';
@@ -13,6 +14,7 @@ import 'package:app/views/profile.page.dart';
 import 'package:app/views/settings/personal_data.page.dart';
 import 'package:app/views/settings/privacy.settings.page.dart';
 import 'package:app/views/settings/settings.page.dart';
+import 'package:app/views/take_photo.page.dart';
 import 'package:flutter/cupertino.dart';
 
 enum PagesEnum {
@@ -21,6 +23,7 @@ enum PagesEnum {
   notifications,
   profile,
   login,
+  newAction,
 }
 
 enum MasterPages {
@@ -28,10 +31,12 @@ enum MasterPages {
   home,
   personalData,
   settings,
-  newAction,
   privacy,
   friendProfile,
   friendshipRequest,
+  takePhoto,
+  noPermission,
+  createAction,
 }
 
 extension PagesEnumExt on PagesEnum {
@@ -80,6 +85,9 @@ class Router {
       case PagesEnum.login:
         page = const LoginPage();
         break;
+      case PagesEnum.newAction:
+        page = const ActionsPage();
+        break;
     }
 
     return PageRouteBuilder(
@@ -110,14 +118,21 @@ class Router {
       case MasterPages.privacy:
         page = const PrivacySettingPage();
         break;
-      case MasterPages.newAction:
-        page = const ActionsPage();
-        break;
+
       case MasterPages.friendProfile:
         page = const FriendProfilePage();
         break;
       case MasterPages.friendshipRequest:
         page = const FriendshipRequestsPage();
+        break;
+      case MasterPages.takePhoto:
+        page = const TakePhotoPage();
+        break;
+      case MasterPages.noPermission:
+        page = const FriendshipRequestsPage();
+        break;
+      case MasterPages.createAction:
+        page = const CreateActionPage();
         break;
     }
 

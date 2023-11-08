@@ -22,9 +22,9 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
   }
 
   getColorOfIcon(int pageIndex) {
-    Color color = Colors.transparent;
+    Color color = Colors.white;
     if (pageIndex == currentPage) {
-      color = AppColors.accentColor;
+      color = Theme.of(context).colorScheme.primary;
     }
 
     return color;
@@ -36,7 +36,11 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary
+      ),
       height: AppBar().preferredSize.height,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -48,7 +52,7 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                 width: constraints.maxWidth / 5,
                 height: AppBar().preferredSize.height,
                 child: Container(
-                  color: AppColors.accentColor,
+                  color: Colors.white,
                 ),
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
@@ -66,7 +70,7 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                       AppIcons.earth.toAssetPath,
                       width: 24,
                       height: 24,
-                      color: Colors.white,
+                      color: getColorOfIcon(0),
                     ),
                   ),
                 )),
@@ -78,14 +82,11 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                       });
                       navigateTo(PagesEnum.friends.toPath);
                     },
-                    child: Container(
-                      alignment: Alignment.center,
-                      child: SvgPicture.asset(
-                        AppIcons.friends.toAssetPath,
-                        width: 22,
-                        color: Colors.white,
-                        height: 22,
-                      ),
+                    child: SvgPicture.asset(
+                      AppIcons.friends.toAssetPath,
+                      width: 22,
+                      color: getColorOfIcon(1),
+                      height: 22,
                     ),
                   ),
                 ),
@@ -93,11 +94,9 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                     child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      currentPage = 0;
+                      currentPage = 2;
                     });
-                    navigateTo(PagesEnum.discovery.toPath);
-                    Keys.masterNavigator.currentState
-                        ?.pushNamed(MasterPages.newAction.toPath);
+                    navigateTo(PagesEnum.newAction.toPath);
                   },
                   child: Container(
                     alignment: Alignment.center,
@@ -123,7 +122,7 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                     child: SvgPicture.asset(
                       AppIcons.bell.toAssetPath,
                       width: 22,
-                      color: Colors.white,
+                      color: getColorOfIcon(3),
                       height: 22,
                     ),
                   ),
@@ -138,8 +137,9 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                   },
                   child: Container(
                     alignment: Alignment.center,
-                    child: const Icon(
+                    child: Icon(
                       Icons.account_circle_outlined,
+                      color: getColorOfIcon(4),
                     ),
                   ),
                 )),

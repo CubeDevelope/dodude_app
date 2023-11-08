@@ -12,6 +12,7 @@ class UserModel extends Model {
   static String friendsKey = "friends";
   static String activeNotificationsKey = "active_notifications";
   static String actionFinishedReviewedKey = "action_finished_reviewed";
+  static String photoUrlKey = "photo_url";
 
   String? name;
   String? surname;
@@ -21,6 +22,7 @@ class UserModel extends Model {
   List<DocumentReference>? friends;
   List<DocumentReference>? activeNotifications;
   List<DocumentReference>? actionFinishedReviewed;
+  String? photoUrl;
 
   UserModel(
       {String? uid,
@@ -31,6 +33,7 @@ class UserModel extends Model {
       this.email,
       this.activeNotifications,
       this.actionFinishedReviewed,
+      this.photoUrl,
       this.friends})
       : super(uid);
 
@@ -54,7 +57,10 @@ class UserModel extends Model {
               .map((e) => e as DocumentReference)
               .toList()
           : [],
-      friends: (map[friendsKey] as List).cast<DocumentReference>() ?? [],
+      photoUrl: map[photoUrlKey],
+      friends: map.containsKey(friendsKey)
+          ? (map[friendsKey] as List).cast<DocumentReference>()
+          : [],
     );
   }
 

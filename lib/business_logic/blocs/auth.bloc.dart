@@ -1,8 +1,10 @@
 import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/business_logic/blocs/states/auth.state.dart';
+import 'package:app/business_logic/blocs/user.bloc.dart';
 import 'package:app/business_logic/managers/firestore.manager.dart';
 import 'package:app/business_logic/repositories/auth.repository.dart';
 import 'package:app/models/user.model.dart';
+import 'package:app/utils/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +28,7 @@ class AuthCubit extends Cubit<AuthState> {
     if (user == null) {
       addInformationState();
     } else {
-      AppProvider.instance.syncActions();
+      await AppProvider.instance.syncActions();
       authenticateState();
     }
   }
@@ -108,6 +110,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   authenticateState() {
     user?.phoneNumber ??= _authRepository.currentUser?.phoneNumber;
+    Keys.masterNavigator.currentContext?.read<UserBloc>().login(user!);
     AppProvider.instance.currentUser = user!;
     AppProvider.instance.getNotification();
     emit(AuthenticatedState());

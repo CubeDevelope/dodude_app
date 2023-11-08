@@ -1,13 +1,24 @@
+import 'dart:io';
+
+import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/enums/endpoint.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirestoreRepository {
-  DocumentReference getDocumentReference(
-      String documentId, FirestoreCollectionsNames collectionsEndpoint) {
-    CollectionReference collectionReference =
-        getCollectionReference(collectionsEndpoint);
 
-    return collectionReference.doc(documentId);
+  DocumentReference getDocumentReference(String documentId,
+      {FirestoreCollectionsNames? collectionsEndpoint,
+      CollectionReference? collectionReference}) {
+    assert(collectionReference != null || collectionsEndpoint != null);
+    if (collectionsEndpoint != null) {
+      CollectionReference collectionRef =
+          getCollectionReference(collectionsEndpoint);
+
+      return collectionRef.doc(documentId);
+    } else {
+      return collectionReference!.doc(documentId);
+    }
   }
 
   CollectionReference getCollectionReference(
@@ -63,16 +74,31 @@ class FirestoreRepository {
     return await doc.update(data);
   }
 
-  createDocument({
-    required DocumentReference doc,
+  Future<dynamic> createDocument({
+    CollectionReference? collectionReference,
+    DocumentReference? documentReference,
     required Map<String, dynamic> data,
   }) async {
-    return await doc.set(data);
+    assert(documentReference != null || collectionReference != null);
+
+    if (documentReference != null) return await documentReference.set(data);
+
+    return await collectionReference!.add(data);
   }
 
   Future<DocumentSnapshot> readDocument({
     required DocumentReference documentReference,
   }) async {
     return await documentReference.get();
+  }
+
+  // Upload file
+
+  uploadFile(File file) async {
+    final ref = FirebaseStorage.instance.ref();
+    final bucketReference =
+        ref.child("user").child("${AppProvider.instance.currentUser.uid!}.jpg");
+    bucketReference.putFile(file);
+    //bucketReference.putFile(file);
   }
 }
