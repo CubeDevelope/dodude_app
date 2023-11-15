@@ -8,9 +8,13 @@ class AuthRepository extends ChangeNotifier {
 
   initApp() async {
     await Firebase.initializeApp();
+    await initFirebaseAppCheck();
+    _auth = FirebaseAuth.instance;
+  }
+
+  initFirebaseAppCheck() async {
     await FirebaseAppCheck.instance
         .activate(androidProvider: AndroidProvider.debug);
-    _auth = FirebaseAuth.instance;
   }
 
   bool get isLogged => _auth?.currentUser != null;

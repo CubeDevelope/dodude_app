@@ -1,3 +1,4 @@
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -21,6 +22,7 @@ enum AppIcons {
   rainbow,
   handshake,
   pizza,
+  dodude,
 }
 
 _toLowerCaseString(String text) {
@@ -61,11 +63,11 @@ class Keys {
 DateFormat dateFormat = DateFormat("dd/MM/yyyy");
 
 class AppColors {
-  static Color accentColor = const Color(0xffff7300);
+  static Color accentColor = const Color(0xffFFCC4D);
 
   static ThemeData lightTheme = ThemeData.light().copyWith(
     colorScheme: ThemeData.light().colorScheme.copyWith(
-      primary: Colors.black,
+          primary: Colors.black,
           secondary: const Color(0xffFFCC4D),
         ),
     floatingActionButtonTheme: ThemeData.light()
@@ -87,9 +89,10 @@ class AppColors {
           primary: accentColor,
           secondary: Colors.black,
         ),
-    floatingActionButtonTheme: ThemeData.light()
-        .floatingActionButtonTheme
-        .copyWith(backgroundColor: AppColors.accentColor),
+    floatingActionButtonTheme:
+        ThemeData.dark().floatingActionButtonTheme.copyWith(
+              backgroundColor: AppColors.accentColor,
+            ),
     appBarTheme: ThemeData.dark().appBarTheme.copyWith(
         elevation: 0,
         titleTextStyle: ThemeData.dark()
@@ -99,4 +102,13 @@ class AppColors {
         color: ThemeData.dark().scaffoldBackgroundColor,
         centerTitle: true),
   );
+}
+
+extension ReferenceExt on Reference {
+  String get storagePath {
+    String basePath =
+        "https://firebasestorage.googleapis.com/v0/b/moodmate-2d671.appspot.com/o/";
+    String referencePath = fullPath.replaceAll('/', '%2F');
+    return "$basePath$referencePath?alt=media&token=ff7b0725-3f9c-4159-be3c-ab075d3640bd";
+  }
 }

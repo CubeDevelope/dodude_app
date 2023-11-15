@@ -57,11 +57,6 @@ class _ActionsPageState extends State<ActionsPage> {
     return tiles;
   }
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
   List<Widget> _buildPage(List<ActionType> state) {
     if (currentTryOfActions >= 3) {
       return [

@@ -12,13 +12,12 @@ class HomeCubit extends Cubit<List<CompletedAction>> {
 
     emit(completedActions);
   }
-
   votePost(CompletedAction action, bool isPositive) {
 
     CompletedAction updateAction;
     if (isPositive) {
       updateAction = action.copyWith(
-        angelsPositive: [...action.angelsPositive ?? [], AppProvider.instance.userDocReference]
+          angelsPositive: [...action.angelsPositive ?? [], AppProvider.instance.userDocReference]
       );
     } else {
       updateAction = action.copyWith(

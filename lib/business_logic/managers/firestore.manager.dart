@@ -8,6 +8,7 @@ import 'package:app/models/completed_action.model.dart';
 import 'package:app/models/notification.model.dart';
 import 'package:app/models/user.model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FirestoreManager extends BaseManager {
   DocumentSnapshot? usernameDoc;
@@ -32,8 +33,11 @@ class FirestoreManager extends BaseManager {
         FirestoreCollectionsNames.actionFinished,
       ),
       field: "created_at",
-      isGreaterThanOrEqualTo:
-          Timestamp.fromDate(DateTime(DateTime.now().year - 1)),
+      orderBy: "created_at",
+      asc: false,
+      isGreaterThanOrEqualTo: Timestamp.fromDate(
+        DateTime(DateTime.now().year - 1),
+      ),
     );
 
     List<CompletedAction> completedActions = [];
@@ -41,15 +45,8 @@ class FirestoreManager extends BaseManager {
     for (var doc in actions.docs) {
       var action = CompletedAction.fromDocument(doc);
 
-      if (action.creatorImage.isNotEmpty) completedActions.add(action);
+      completedActions.add(action);
     }
-
-    completedActions.sort(
-      (a, b) {
-        if (a.createdAt == null || b.createdAt == null) return 0;
-        return a.createdAt!.compareTo(b.createdAt!) * -1;
-      },
-    );
 
     return completedActions;
   }
@@ -134,8 +131,8 @@ class FirestoreManager extends BaseManager {
             collectionsEndpoint: FirestoreCollectionsNames.actionFinished));
   }
 
-  uploadImage(File file) {
-    firestoreRepository.uploadFile(file);
+  uploadActionImage(File file, Reference reference) async {
+    return await firestoreRepository.uploadFile(file, reference);
   }
 
   _getUsernameDocReference() {
@@ -197,8 +194,47 @@ class FirestoreManager extends BaseManager {
 
   deleteUser() {}
 
+  // friends
+  Future<UserModel?> getFriendProfile(
+      {required DocumentReference friendRef}) async {
+    var snap = await friendRef.get();
+    if (snap.data() == null) return null;
+    return UserModel.fromDocument(snap);
+  }
+
+  Future<List<CompletedAction>> getFriendActions(DocumentReference ref) async {
+    QuerySnapshot actions =
+        await firestoreRepository.getAllDocumentsFromCollection(
+      collection: firestoreRepository.getCollectionReference(
+        FirestoreCollectionsNames.actionFinished,
+      ),
+      field: "created_by",
+      isEqualTo: ref,
+    );
+
+    List<CompletedAction> completedActions = [];
+
+    for (var doc in actions.docs.reversed) {
+      var action = CompletedAction.fromDocument(doc);
+
+      if (action.creatorImage.isNotEmpty) completedActions.add(action);
+    }
+
+    completedActions.sort(
+      (a, b) {
+        if (a.createdAt == null || b.createdAt == null) return 0;
+        return a.createdAt!.compareTo(b.createdAt!) * -1;
+      },
+    );
+
+    return completedActions;
+  }
+
   // Actions
 
+  // getFriendActions
+
+  // create
   createNewAction(CompletedAction action) async {
     firestoreRepository
         .createDocument(
@@ -210,13 +246,14 @@ class FirestoreManager extends BaseManager {
 
   // Streams Snapshot
 
-  Stream<DocumentSnapshot> getUserInformation(String userId) {
+  Stream<DocumentSnapshot> getUserInformationSnapshot(String userId) {
     return firestoreRepository.getDocumentSnapshot(
-        documentReference: firestoreRepository.getDocumentReference(userId,
-            collectionsEndpoint: FirestoreCollectionsNames.user));
+      documentReference: firestoreRepository.getDocumentReference(userId,
+          collectionsEndpoint: FirestoreCollectionsNames.user),
+    );
   }
 
-  Stream<QuerySnapshot> getUserActions(String userId) {
+  Stream<QuerySnapshot> getUserActionsSnapshot(String userId) {
     return firestoreRepository.getAllDocumentFromCollectionSnapshot(
       collection: firestoreRepository
           .getCollectionReference(FirestoreCollectionsNames.actionFinished),

@@ -36,11 +36,8 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary
-      ),
+      decoration: BoxDecoration(color: Theme.of(context).colorScheme.secondary),
       height: AppBar().preferredSize.height,
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -57,8 +54,8 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
               ),
               Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
                 Expanded(
-                    child: GestureDetector(
-                  onTap: () {
+                    child: TextButton(
+                  onPressed: () {
                     navigateTo(PagesEnum.discovery.toPath);
                     setState(() {
                       currentPage = 0;
@@ -75,8 +72,8 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                   ),
                 )),
                 Expanded(
-                  child: GestureDetector(
-                    onTap: () {
+                  child: TextButton(
+                    onPressed: () {
                       setState(() {
                         currentPage = 1;
                       });
@@ -91,8 +88,8 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                   ),
                 ),
                 Expanded(
-                    child: GestureDetector(
-                  onTap: () {
+                    child: TextButton(
+                  onPressed: () {
                     setState(() {
                       currentPage = 2;
                     });
@@ -110,8 +107,8 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                   ),
                 )),
                 Expanded(
-                    child: GestureDetector(
-                  onTap: () {
+                    child: TextButton(
+                  onPressed: () {
                     setState(() {
                       currentPage = 3;
                     });
@@ -128,8 +125,8 @@ class _DodudeNavBarState extends State<DodudeNavBar> {
                   ),
                 )),
                 Expanded(
-                    child: GestureDetector(
-                  onTap: () {
+                    child: TextButton(
+                  onPressed: () {
                     setState(() {
                       currentPage = 4;
                     });

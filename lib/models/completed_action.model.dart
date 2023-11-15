@@ -7,6 +7,7 @@ class CompletedAction extends Model {
   static String totalViewsKey = "total_views";
   static String angelsNegativeKey = "angels_negative";
   static String angelsPositiveKey = "angels_positive";
+  static String actionImageKey = "action_image";
   static String createdByKey = "created_by";
   static String creatorImageKey = "creator_image";
   static String creatorUsernameKey = "creator_username";
@@ -18,6 +19,7 @@ class CompletedAction extends Model {
     this.actionDescription = "",
     this.actionTitle = "",
     this.totalViews = 0,
+    this.actionImage = "",
     this.angelsNegative,
     this.angelsPositive,
     this.creatorImage = "",
@@ -30,6 +32,7 @@ class CompletedAction extends Model {
   String actionDescription;
   String actionTitle;
   String creatorImage;
+  String actionImage;
   int totalViews;
   List<DocumentReference>? angelsNegative;
   List<DocumentReference>? angelsPositive;
@@ -40,9 +43,10 @@ class CompletedAction extends Model {
 
   factory CompletedAction.fromJson(Map<String, dynamic> json) {
     var completeAction = CompletedAction(
-        actionDescription: json[actionDescriptionKey],
+        actionDescription: json[actionDescriptionKey] ?? "",
         actionTitle: json[actionTitleKey] ?? "Nessun titolo",
-        totalViews: json[totalViewsKey],
+        actionImage: json[actionImageKey] ?? "",
+        totalViews: json[totalViewsKey] ?? 0,
         creatorImage: json[creatorImageKey] ?? "",
         angelsNegative: json.containsKey(angelsNegativeKey)
             ? (json[angelsNegativeKey] as List).cast<DocumentReference>()
@@ -88,6 +92,7 @@ class CompletedAction extends Model {
         totalViews: totalViews,
         actionTitle: actionTitle,
         actionDescription: actionDescription,
+        actionImage: actionImage,
         creatorImage: creatorImage,
         creatorUsername: creatorUsername,
         action: action ?? this.action);
@@ -102,6 +107,8 @@ class CompletedAction extends Model {
       angelsNegativeKey: angelsNegative ?? [],
       createdByKey: createdBy,
       actionKey: action,
+      actionImageKey: actionImage,
+      createdAtKey: createdAt,
     };
   }
 

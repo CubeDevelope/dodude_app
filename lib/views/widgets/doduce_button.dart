@@ -58,19 +58,11 @@ class DodudeButton extends StatelessWidget {
                     topLeft: Radius.circular(16),
                     bottomRight: Radius.circular(16),
                   ),
-                  color: Theme.of(context).colorScheme.secondary,
+                  color: Theme.of(context).colorScheme.primary,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    (icon != null
-                        ? SvgPicture.asset(
-                            icon!.toAssetPath,
-                            width: 30,
-                            color: Colors.white,
-                            height: 30,
-                          )
-                        : Container()),
                     title != null
                         ? Padding(
                             padding: const EdgeInsets.symmetric(
@@ -85,22 +77,30 @@ class DodudeButton extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             ),
                           )
-                        : Container()
+                        : Container(),
+                    (icon != null
+                        ? SvgPicture.asset(
+                            icon!.toAssetPath,
+                            width: 30,
+                            height: 30,
+                          )
+                        : Container()),
                   ],
                 ),
               ),
             ),
           ),
-          Container(
-            height: 10,
-            width: 54,
-            margin: const EdgeInsets.only(top: 4),
-            color: hasProcess
-                ? Theme.of(context).colorScheme.secondary
-                : Colors.transparent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: _buildProcess(),
+          Visibility(
+            visible: hasProcess,
+            child: Container(
+              height: 10,
+              width: 54,
+              margin: const EdgeInsets.only(top: 4),
+              color: Theme.of(context).colorScheme.secondary,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: _buildProcess(),
+              ),
             ),
           )
         ],

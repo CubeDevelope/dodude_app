@@ -9,12 +9,13 @@ import 'package:app/views/friend_profile.page.dart';
 import 'package:app/views/friends.page.dart';
 import 'package:app/views/friendship_requests.page.dart';
 import 'package:app/views/home.page.dart';
+import 'package:app/views/market.page.dart';
 import 'package:app/views/notification.page.dart';
-import 'package:app/views/profile.page.dart';
+import 'package:app/views/personal_profile.page.dart';
 import 'package:app/views/settings/personal_data.page.dart';
 import 'package:app/views/settings/privacy.settings.page.dart';
 import 'package:app/views/settings/settings.page.dart';
-import 'package:app/views/take_photo.page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 
 enum PagesEnum {
@@ -34,9 +35,9 @@ enum MasterPages {
   privacy,
   friendProfile,
   friendshipRequest,
-  takePhoto,
   noPermission,
   createAction,
+  market,
 }
 
 extension PagesEnumExt on PagesEnum {
@@ -75,7 +76,6 @@ class Router {
       case PagesEnum.friends:
         page = const FriendsPage();
         break;
-
       case PagesEnum.notifications:
         page = const NotificationPage();
         break;
@@ -118,21 +118,22 @@ class Router {
       case MasterPages.privacy:
         page = const PrivacySettingPage();
         break;
-
       case MasterPages.friendProfile:
-        page = const FriendProfilePage();
+        page = FriendProfilePage(
+          friendRef: settings.arguments as DocumentReference,
+        );
         break;
       case MasterPages.friendshipRequest:
         page = const FriendshipRequestsPage();
-        break;
-      case MasterPages.takePhoto:
-        page = const TakePhotoPage();
         break;
       case MasterPages.noPermission:
         page = const FriendshipRequestsPage();
         break;
       case MasterPages.createAction:
         page = const CreateActionPage();
+        break;
+      case MasterPages.market:
+        page = const MarketPage();
         break;
     }
 

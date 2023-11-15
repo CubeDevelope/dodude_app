@@ -34,11 +34,11 @@ class _AuthManagerPageState extends State<AuthManagerPage> {
             );
 
             switch (state.runtimeType) {
-              case UnsignedState:
-                page = const LoginPage();
-                break;
               case InitializationState:
                 page = const SplashPage();
+                break;
+              case UnsignedState:
+                page = const LoginPage();
                 break;
               case ConfirmOTPState:
                 page = const ConfirmOTPPage();

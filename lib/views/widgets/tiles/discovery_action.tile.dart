@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/models/completed_action.model.dart';
 import 'package:app/utils/constants.dart';
+import 'package:app/utils/router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -29,8 +30,8 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
 
   @override
   void initState() {
-    action = widget.completedAction;
     super.initState();
+    action = widget.completedAction;
   }
 
   int _getMaxVotedState() {
@@ -80,7 +81,7 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
             imageFilter: ImageFilter.blur(
                 sigmaX: 20, sigmaY: 20, tileMode: TileMode.mirror),
             child: CachedNetworkImage(
-              imageUrl: widget.completedAction.creatorImage,
+              imageUrl: widget.completedAction.actionImage,
               width: double.maxFinite,
               height: double.maxFinite,
               fit: BoxFit.fill,
@@ -88,7 +89,6 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
               errorWidget: (context, url, error) {
                 return Container(
                   alignment: Alignment.center,
-                  child: const Text("Errore nel download dell'immagine"),
                 );
               },
               progressIndicatorBuilder: (context, url, progress) {
@@ -99,7 +99,7 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
         ),
         Positioned.fill(
             child: CachedNetworkImage(
-          imageUrl: widget.completedAction.creatorImage,
+          imageUrl: widget.completedAction.actionImage,
           width: double.maxFinite,
           height: double.maxFinite,
           filterQuality: FilterQuality.low,
@@ -107,7 +107,10 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
           errorWidget: (context, url, error) {
             return Container(
               alignment: Alignment.center,
-              child: const Text("Errore nel download dell'immagine"),
+              child: const Icon(
+                Icons.refresh,
+                size: 42,
+              ),
             );
           },
           progressIndicatorBuilder: (context, url, progress) {
@@ -142,26 +145,39 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        margin: const EdgeInsets.only(bottom: 8),
-                        alignment: Alignment.bottomRight,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(30.0),
-                            color: Colors.red,
-                            border: Border.all(width: 2, color: Colors.white)),
+                      GestureDetector(
                         child: Container(
-                          width: 14,
-                          height: 14,
+                          width: 40,
+                          height: 40,
+                          margin: const EdgeInsets.only(bottom: 8),
+                          alignment: Alignment.bottomRight,
                           decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: const Icon(
-                            Icons.add,
-                            size: 10.0,
+                              image: DecorationImage(
+                                  filterQuality: FilterQuality.low,
+                                  image: NetworkImage(
+                                    action.creatorImage,
+                                    scale: .2,
+                                  )),
+                              borderRadius: BorderRadius.circular(30.0),
+                              border:
+                                  Border.all(width: 2, color: Colors.white)),
+                          child: Container(
+                            width: 14,
+                            height: 14,
+                            decoration: BoxDecoration(
+                                color: Colors.black,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: const Icon(
+                              Icons.add,
+                              size: 10.0,
+                            ),
                           ),
                         ),
+                        onTap: () {
+                          Keys.masterNavigator.currentState?.pushNamed(
+                              MasterPages.friendProfile.toPath,
+                              arguments: action.createdBy);
+                        },
                       ),
                       IconButton(
                         onPressed: () {},
@@ -221,7 +237,7 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
                           style: const TextStyle(
                             color: Colors.white,
                           ),
-                        )
+                        ),
                       ]
                           .expand<Widget>((element) => [
                                 element,
@@ -266,7 +282,6 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
-
                                 fontSize: _getMaxVotedState() == 1 ? 29 : 20),
                           ),
                         ),
@@ -296,7 +311,10 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
                                 ? 60 * 1.5
                                 : 60,
                             decoration: BoxDecoration(
-                                border: Border.all(width: 2, color: Theme.of(context).colorScheme.primary),
+                                border: Border.all(
+                                    width: 2,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Text(
                               "👌",
@@ -366,7 +384,10 @@ class _DiscoveryActionTileState extends State<DiscoveryActionTile> {
                                 ? 60 * 1.5
                                 : 60,
                             decoration: BoxDecoration(
-                                border: Border.all(width: 2, color: Theme.of(context).colorScheme.primary),
+                                border: Border.all(
+                                    width: 2,
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                                 borderRadius: BorderRadius.circular(16)),
                             child: Text(
                               "🤌",

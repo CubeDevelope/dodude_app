@@ -4,16 +4,16 @@ enum FirebaseFunctionEndpoints {
   getAllActions,
 }
 
+extension EndpointsExt on FirebaseFunctionEndpoints {
+  String get toShortString => toString().split('.').last;
+}
+
 enum FirestoreCollectionsNames {
   user,
   adminStuff,
   actionFinished,
   activeNotifications,
   actionType
-}
-
-extension EndpointsExt on FirebaseFunctionEndpoints {
-  String get toShortString => toString().split('.').last;
 }
 
 extension FirestoreCollectionsExt on FirestoreCollectionsNames {
@@ -36,4 +36,16 @@ extension FirestoreCollectionsExt on FirestoreCollectionsNames {
     }
     return shortString;
   }
+}
+
+enum NotificationType {
+  comment,
+  follow,
+  friendshipRequest,
+  friendshipAccepted,
+  earnPizza,
+  earnRainbow,
+  pizzaRecap,
+  rainbowRecap,
+  adv
 }

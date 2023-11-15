@@ -9,7 +9,6 @@ import 'package:app/business_logic/repositories/firestore.repositories.dart';
 import 'package:app/enums/endpoint.dart';
 import 'package:app/models/user.model.dart';
 import 'package:app/utils/constants.dart';
-import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -23,7 +22,6 @@ class AppProvider {
   PermissionStatus cameraPermission = PermissionStatus.denied;
 
   UserModel currentUser = UserModel();
-  List<CameraDescription> cameras = [];
 
   AppProvider._();
 
@@ -39,24 +37,6 @@ class AppProvider {
 
   getNotification() async {
     notificationCubit.getNotifications();
-  }
-
-  checkCameraPermission() async {
-    Permission permission = Permission.camera;
-    if (cameraPermission == PermissionStatus.denied) {
-      cameraPermission = await permission.request();
-    }
-
-    switch (cameraPermission) {
-      case PermissionStatus.granted:
-        return true;
-      case PermissionStatus.limited:
-        return true;
-      case PermissionStatus.provisional:
-        return true;
-      default:
-        return false;
-    }
   }
 
   showSheet(Widget message) {
@@ -85,12 +65,12 @@ class AppProvider {
   syncActions() async {
     homeCubit.getAllActions();
     actionCubit.getThreeActions();
-    cameras = await availableCameras();
-    cameraPermission = await Permission.camera.status;
   }
 
   DocumentReference get userDocReference {
-    return firestoreRepository.getDocumentReference(currentUser.uid!,
-        collectionsEndpoint: FirestoreCollectionsNames.user);
+    return firestoreRepository.getDocumentReference(
+      currentUser.uid!,
+      collectionsEndpoint: FirestoreCollectionsNames.user,
+    );
   }
 }

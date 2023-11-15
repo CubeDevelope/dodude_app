@@ -1,3 +1,4 @@
+import 'package:app/enums/endpoint.dart';
 import 'package:app/models/base.model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,22 +12,23 @@ class NotificationModel extends Model {
   final Timestamp? createdAt;
   final String notificationDescription;
   final String notificationTitle;
-  final int notificationType;
+  final NotificationType notificationType;
 
   NotificationModel(
       {this.createdAt,
       String uid = "",
       this.notificationDescription = "",
       this.notificationTitle = "",
-      this.notificationType = 0})
+      this.notificationType = NotificationType.follow})
       : super(uid);
 
   factory NotificationModel.fromJson(Map<String, dynamic> map) {
     return NotificationModel(
-        createdAt: map[createdAtKey],
-        notificationDescription: map[notificationDescriptionKey] ?? "",
-        notificationTitle: map[notificationTitleKey] ?? "",
-        notificationType: map[notificationTypeKey] ?? 0);
+      createdAt: map[createdAtKey],
+      notificationDescription: map[notificationDescriptionKey] ?? "",
+      notificationTitle: map[notificationTitleKey] ?? "",
+      notificationType: NotificationType.follow,
+    );
   }
 
   factory NotificationModel.fromDocument(DocumentSnapshot snapshot) {
@@ -43,7 +45,7 @@ class NotificationModel extends Model {
       createdAtKey: createdAt,
       notificationDescriptionKey: notificationDescription,
       notificationTitleKey: notificationTitle,
-      notificationTypeKey : notificationType
+      notificationTypeKey: notificationType
     };
   }
 

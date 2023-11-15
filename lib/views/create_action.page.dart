@@ -1,12 +1,15 @@
 import 'dart:io';
 
 import 'package:app/business_logic/blocs/app.provider.dart';
+import 'package:app/business_logic/blocs/user.bloc.dart';
 import 'package:app/enums/endpoint.dart';
 import 'package:app/models/completed_action.model.dart';
+import 'package:app/utils/constants.dart';
 import 'package:app/views/widgets/doduce_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 
 class CreateActionPage extends StatefulWidget {
@@ -83,7 +86,7 @@ class _CreateActionPageState extends State<CreateActionPage> {
     );
   }
 
-  _buildPageForUploadImage() {
+  _buildPageForUploadImage(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -100,8 +103,15 @@ class _CreateActionPageState extends State<CreateActionPage> {
                   collectionsEndpoint: FirestoreCollectionsNames.actionType,
                 );
                 action.createdAt = Timestamp.now();
+                action.actionDescription = AppProvider
+                    .instance.actionCubit.actionTypeSelected!.actionDescription;
+                action.actionTitle = AppProvider
+                    .instance.actionCubit.actionTypeSelected!.actionTitle;
+                action.creatorUsername =
+                    context.read<UserBloc>().state.user!.username!;
                 AppProvider.instance.actionCubit
-                    .loadImageInStorage(uploadedImage!);
+                    .createNewAction(action, uploadedImage!);
+                Keys.masterNavigator.currentState?.pop();
               },
               margin: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
             ),
@@ -119,9 +129,10 @@ class _CreateActionPageState extends State<CreateActionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: uploadedImage == null
-              ? _buildPageForPickImage()
-              : _buildPageForUploadImage()),
+        child: uploadedImage == null
+            ? _buildPageForPickImage()
+            : _buildPageForUploadImage(context),
+      ),
     );
   }
 }

@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'package:app/business_logic/blocs/app.provider.dart';
 import 'package:app/enums/endpoint.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 class FirestoreRepository {
-
   DocumentReference getDocumentReference(String documentId,
       {FirestoreCollectionsNames? collectionsEndpoint,
       CollectionReference? collectionReference}) {
@@ -37,6 +35,8 @@ class FirestoreRepository {
       String? field,
       Object? isLessThanOrEqualTo,
       Object? isGreaterThanOrEqualTo,
+      String? orderBy,
+        bool asc = true,
       Object? isEqualTo}) async {
     Query queryCollection = collection.limit(limit);
     if (field != null) {
@@ -47,17 +47,24 @@ class FirestoreRepository {
         isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
       );
     }
+
+    if (orderBy != null) queryCollection = queryCollection.orderBy(orderBy, descending: !asc);
     return await queryCollection.get();
   }
 
   getAllDocumentFromCollectionSnapshot(
       {required CollectionReference collection,
       String? field,
+        String? orderBy,
+        bool asc = true,
+        int limit = 10,
       Object? isEqualTo}) {
-    Query queryCollection = collection.limit(10);
+    Query queryCollection = collection.limit(limit);
     if (field != null) {
       queryCollection = queryCollection.where(field, isEqualTo: isEqualTo);
     }
+    if (orderBy != null) queryCollection = queryCollection.orderBy(orderBy, descending: !asc);
+
     return queryCollection.snapshots();
   }
 
@@ -94,11 +101,7 @@ class FirestoreRepository {
 
   // Upload file
 
-  uploadFile(File file) async {
-    final ref = FirebaseStorage.instance.ref();
-    final bucketReference =
-        ref.child("user").child("${AppProvider.instance.currentUser.uid!}.jpg");
-    bucketReference.putFile(file);
-    //bucketReference.putFile(file);
+  uploadFile(File file, Reference ref) async {
+    return await ref.putFile(file);
   }
 }
